@@ -256,5 +256,5 @@ fabric-finance-lakehouse/
 
 **Sai Krishna Puvvalla**
 📧 saikrishnapuvvalla@gmail.com
-🔗 [LinkedIn](www.linkedin.com/in/saikrishnap8978)
+🔗 [LinkedIn](https://www.linkedin.com/in/saikrishnap8978/)
 🐙 [GitHub](https://github.com/sai2809)
