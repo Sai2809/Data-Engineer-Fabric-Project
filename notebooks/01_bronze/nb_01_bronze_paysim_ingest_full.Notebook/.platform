@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_01_bronze_paysim_ingest_full"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f8c8777c-590a-ada0-4038-e279e2904c9c"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "pl_finance_e2e_batch"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "1f134090-8622-b09f-429d-888b2f73af44"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "nb_04_gold_optimize_tables"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "100fc556-7bf3-a42b-40e4-030a68146989"
+  }
+}

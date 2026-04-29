@@ -1,0 +1,451 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(pipeline().parameters.p_load_type,'Full')",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "f8c8777c-590a-ada0-4038-e279e2904c9c",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_source_file": {
+                    "value": {
+                      "value": "paysim_transactions_full_20260214.csv",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_bronze_ingest_transactions",
+              "dependsOn": []
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "b5022e85-9cb0-9b7b-41ff-5cb7a0559179",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_silver_transform_transactions",
+              "dependsOn": [
+                {
+                  "activity": "nb_bronze_ingest_transactions",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "d5be0df8-256f-8661-473a-f228b600d8df",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_gold_build_transactions_model",
+              "dependsOn": [
+                {
+                  "activity": "nb_silver_transform_transactions",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "100fc556-7bf3-a42b-40e4-030a68146989",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_gold_optimize_tables",
+              "dependsOn": [
+                {
+                  "activity": "nb_gold_build_transactions_model",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "c354b6fd-0f1b-86b7-403b-b21fe056fe5f",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": "FULL",
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_05_data_quality_checks",
+              "dependsOn": [
+                {
+                  "activity": "nb_gold_optimize_tables",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Fail",
+              "typeProperties": {
+                "message": "Pipeline  execution failed",
+                "errorCode": "PIPLINE_FAILED"
+              },
+              "name": "fail_pipeline_execution",
+              "dependsOn": [
+                {
+                  "activity": "nb_bronze_ingest_transactions",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                },
+                {
+                  "activity": "nb_silver_transform_transactions",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                },
+                {
+                  "activity": "nb_gold_build_transactions_model",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                },
+                {
+                  "activity": "nb_gold_optimize_tables",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                },
+                {
+                  "activity": "nb_05_data_quality_checks",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                }
+              ]
+            }
+          ],
+          "ifFalseActivities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "f8c8777c-590a-ada0-4038-e279e2904c9c",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type ": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_source_file": {
+                    "value": {
+                      "value": "paysim_transactions_full_20260214.csv",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_01_bronze_paysim_ingest_full_fail",
+              "dependsOn": []
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "b5022e85-9cb0-9b7b-41ff-5cb7a0559179",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_02_silver_paysim_transform_fail",
+              "dependsOn": [
+                {
+                  "activity": "nb_01_bronze_paysim_ingest_full_fail",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "d5be0df8-256f-8661-473a-f228b600d8df",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_03_gold_model_build_fail",
+              "dependsOn": [
+                {
+                  "activity": "nb_02_silver_paysim_transform_fail",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "c354b6fd-0f1b-86b7-403b-b21fe056fe5f",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "p_env": {
+                    "value": "dev",
+                    "type": "string"
+                  },
+                  "p_load_type": {
+                    "value": {
+                      "value": "@pipeline().parameters.p_load_type",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "p_pipeline_run_id": {
+                    "value": {
+                      "value": "@pipeline().RunId",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "nb_05_data_quality_checks_fail",
+              "dependsOn": [
+                {
+                  "activity": "nb_03_gold_model_build_fail",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "if_full_load_path",
+        "dependsOn": []
+      }
+    ],
+    "parameters": {
+      "p_load_type": {
+        "type": "string",
+        "defaultValue": "Full"
+      }
+    }
+  }
+}
